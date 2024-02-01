@@ -1,0 +1,702 @@
+systemgraph {
+  vertex "graySY"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, graySig, inSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "intDiv": 32768_l,
+        "floatAdd": 32768_l,
+        "cpy": 3072_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "graySig"
+    ],
+    "inputPorts": [
+      "inSig"
+    ]
+  }
+  vertex "grayMapVA"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, inSig, interleavedVec, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "cpy": 3072_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "interleavedVec"
+    ],
+    "inputPorts": [
+      "inSig"
+    ]
+  }
+  vertex "grayInterleaveV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::InterleaveV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, impl::InstrumentedExecutable, parallel::InterleaveV, visualization::GreyBox]
+  (contained, inSig, interleavedVec, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "cpy": 96_l
+      }
+    },
+    "maxSizeInBits": {
+      "default": 0_l
+    },
+    "outputPorts": [
+      "interleavedVec"
+    ],
+    "inputPorts": [
+      "inSig"
+    ],
+    "stride": 3_i,
+    "radius": 3_i,
+    "operationRequirements": {
+      "impl1": {
+        "cpy": 96_l
+      }
+    },
+    "sizeInBits": 0_l
+  }
+  vertex "grayMapVB"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, graySig, interleavedVec, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "intDiv": 32768_l,
+        "floatAdd": 32768_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "graySig"
+    ],
+    "inputPorts": [
+      "interleavedVec"
+    ]
+  }
+  vertex "grayMapMapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, graySig, interleavedVec, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "intDiv": 1024_l,
+        "floatAdd": 1024_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "graySig"
+    ],
+    "inputPorts": [
+      "interleavedVec"
+    ]
+  }
+  vertex "grayMapMapMapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, grayMapMapMapVec, interleavedVec, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "intDiv": 32_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "grayMapMapMapVec"
+    ],
+    "inputPorts": [
+      "interleavedVec"
+    ]
+  }
+  vertex "grayMapMapReduceV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::ReduceV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::ReduceV, visualization::GreyBox]
+  (contained, grayMapMapMapVec, graySig, kernels)
+  {
+    "inputArray": "grayMapMapMapVec",
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "floatAdd": 3_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "graySig"
+    ],
+    "inputPorts": [
+      "grayMapMapMapVec"
+    ],
+    "outputScalar": "graySig"
+  }
+  vertex "intDivisionto3"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::implementation::code::HasANSICImplementations, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::ANSICBlackBoxExecutable, impl::InstrumentedExecutable, visualization::VisualizableWithProperties]
+  (a, res)
+  {
+    "visualizedPropertiesNames": [
+      "inlinedCode"
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "intDiv": 1_l
+      }
+    },
+    "maxSizeInBits": {
+      "default": 0_l
+    },
+    "outputArgumentPorts": [
+      "res"
+    ],
+    "returnPort": "res",
+    "inlinedCodes": {
+      "generic": "res = a/3;"
+    },
+    "inlinedCode": "res = a/3;",
+    "outputPorts": [
+      "res"
+    ],
+    "inputPorts": [
+      "a"
+    ],
+    "inputArgumentPorts": [
+      "a"
+    ],
+    "operationRequirements": {
+      "impl1": {
+        "intDiv": 1_l
+      }
+    },
+    "sizeInBits": 0_l
+  }
+  
+   vertex "floatAdd"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::implementation::code::HasANSICImplementations, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::ANSICBlackBoxExecutable, impl::InstrumentedExecutable, visualization::VisualizableWithProperties]
+  (res, rgb)
+  {
+    "visualizedPropertiesNames": [
+      "inlinedCode"
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "floatAdd": 1_l
+      }
+    },
+    "maxSizeInBits": {
+      "default": 0_l
+    },
+    "outputArgumentPorts": [
+      "res"
+    ],
+    "returnPort": "res",
+    "inlinedCodes": {
+      "generic": "res = a+b;"
+    },
+    "inlinedCode": "res = a+b;",
+    "outputPorts": [
+      "res"
+    ],
+    "inputPorts": [
+      "a",
+      "b"
+    ],
+    "inputArgumentPorts": [
+      "a",
+      "b"
+    ],
+    "operationRequirements": {
+      "impl1": {
+        "floatAdd": 1_l
+      }
+    },
+    "sizeInBits": 0_l
+  }
+  
+  vertex "resizeSY"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, graySig, resizedSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "floatAdd": 16896_l,
+        "floatDiv": 256_l,
+        "cpy": 3168_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "resizedSig"
+    ],
+    "inputPorts": [
+      "graySig"
+    ]
+  }
+ 
+  vertex "maxBrightnessSY"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, maxBrightnessSig, resizedSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "comparison": 272_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "maxBrightnessSig"
+    ],
+    "inputPorts": [
+      "resizedSig"
+    ]
+  }
+  
+  vertex "minBrightnessSY"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, minBrightnessSig, resizedSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "comparison": 272_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "minBrightnessSig"
+    ],
+    "inputPorts": [
+      "resizedSig"
+    ]
+  }
+  
+  vertex "controlSY"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::InstrumentedExecutable, moc::sy::SYMap, visualization::VisualizableWithProperties]
+  (combFunctions, controlSig, maxBrightnessSig, minBrightnessSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "mooreFSM": 1_l
+      }
+    },
+    "maxSizeInBits": {
+      "default": 0_l
+    },
+    "outputPorts": [
+      "controlSig"
+    ],
+    "inputPorts": [
+      "maxBrightnessSig",
+      "minBrightnessSig"
+    ],
+    "operationRequirements": {
+      "impl1": {
+        "mooreFSM": 1_l
+      }
+    },
+    "sizeInBits": 0_l
+  }
+  vertex "correctionSY"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, controlSig, correctedSig, maxBrightnessSig, minBrightnessSig, resizedSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "intSub": 2048_l,
+        "comparison": 1024_l,
+        "intMulti": 1024_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "correctedSig"
+    ],
+    "inputPorts": [
+      "controlSig",
+      "resizedSig",
+      "maxBrightnessSig",
+      "minBrightnessSig"
+    ]
+  }
+
+  vertex "sobelSY"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::InstrumentedExecutable, moc::sy::SYMap, visualization::VisualizableWithProperties]
+  (combFunctions, correctedSig, sobelSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "sobel": 1_l
+      }
+    },
+    "maxSizeInBits": {
+      "default": 0_l
+    },
+    "outputPorts": [
+      "sobelSig"
+    ],
+    "inputPorts": [
+      "correctedSig"
+    ],
+    "operationRequirements": {
+      "impl1": {
+        "sobel": 1_l
+      }
+    },
+    "sizeInBits": 0_l
+  }
+  vertex "asciiSY"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, processedImageSig, sobelSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "intSub": 256_l,
+        "intDiv": 512_l,
+        "intMulti": 256_l
+      }
+    },
+    "maxSizeInBits": {},
+    "outputPorts": [
+      "processedImageSig"
+    ],
+    "inputPorts": [
+      "sobelSig"
+    ]
+  }
+
+  vertex "inSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (consumers, contained, dataType, input, output, producer)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "outputPorts": [
+
+    ],
+    "inputPorts": [
+
+    ],
+    "sizeInBits": 0_l
+  }
+  vertex "inV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output, consumers, producer)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      8_i,
+      24_i
+    ],
+    "sizeInBits": 0_l
+  }
+  vertex "interleavedVec"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output, consumers, producer)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      8_i,
+      8_i,
+      3_i
+    ],
+    "sizeInBits": 0_l
+  }
+  vertex "grayMapMapMapVec"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output, consumers, producer)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      3_i
+    ],
+    "sizeInBits": 0_l
+  }
+  vertex "graySig"
+  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (consumers, contained, dataType, input, output, producer)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "outputPorts": [
+
+    ],
+    "inputPorts": [
+
+    ],
+    "sizeInBits": 0_l
+  }
+  vertex "grayV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output, consumers, producer)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      8_i,
+      8_i
+    ],
+    "sizeInBits": 0_l
+  }
+  vertex "resizedSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (consumers, contained, dataType, input, output, producer)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "outputPorts": [
+
+    ],
+    "inputPorts": [
+
+    ],
+    "sizeInBits": 0_l
+  }
+
+  vertex "maxBrightnessSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, moc::sy::SYSignal, visualization::VisualizableWithProperties]
+  (consumers, dataType, input, output, producer)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "outputPorts": [
+
+    ],
+    "inputPorts": [
+
+    ],
+    "sizeInBits": 0_l
+  }
+  vertex "minBrightnessSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, moc::sy::SYSignal, visualization::VisualizableWithProperties]
+  (consumers, dataType, input, output, producer)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "outputPorts": [
+
+    ],
+    "inputPorts": [
+
+    ],
+    "sizeInBits": 0_l
+  }
+  vertex "controlSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, moc::sy::SYSignal, visualization::VisualizableWithProperties]
+  (consumers, dataType, input, output, producer)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "outputPorts": [
+
+    ],
+    "inputPorts": [
+
+    ],
+    "sizeInBits": 0_l
+  }
+  vertex "correctedSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (consumers, contained, dataType, input, output, producer)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "outputPorts": [
+
+    ],
+    "inputPorts": [
+
+    ],
+    "sizeInBits": 0_l
+  }
+  
+  vertex "sobelSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (consumers, contained, dataType, input, output, producer)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "outputPorts": [
+
+    ],
+    "inputPorts": [
+
+    ],
+    "sizeInBits": 0_l
+  }
+  
+  vertex "processedImageSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::MoCEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (consumers, contained, dataType, input, output, producer)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "outputPorts": [
+
+    ],
+    "inputPorts": [
+
+    ],
+    "sizeInBits": 0_l
+  }
+  
+  vertex "application"
+  [forsyde::io::lib::hierarchy::visualization::GreyBox, visualization::GreyBox]
+  (contained)
+  {}
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "inSig" port "producer" to "inV" port "producer"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "inV" port "consumers" to "inSig" port "consumers"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge, forsyde::io::lib::hierarchy::visualization::VisualConnection] from "inSig" port "consumers" to "graySY" port "inSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge, forsyde::io::lib::hierarchy::visualization::VisualConnection] from "graySY" port "graySig" to "graySig" port "producer"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "graySig" port "producer" to "grayV" port "producer"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayV" port "consumers" to "graySig" port "consumers"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "graySY" port "inSig" to "grayMapVA" port "inSig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayMapVA" port "inSig" to "grayInterleaveV" port "inSig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayInterleaveV" port "interleavedVec" to "grayMapVA" port "interleavedVec"
+  edge [forsyde::io::lib::hierarchy::behavior::parallel::ParallelComputationEdge, forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayMapVA" port "interleavedVec" to "interleavedVec" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::parallel::ParallelComputationEdge, forsyde::io::lib::hierarchy::visualization::VisualConnection] from "interleavedVec" port "consumers" to "grayMapVB" port "interleavedVec"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayMapVB" port "interleavedVec" to "grayMapMapV" port "interleavedVec"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayMapMapV" port "interleavedVec" to "grayMapMapMapV" port "interleavedVec"
+  edge [forsyde::io::lib::hierarchy::behavior::parallel::ParallelComputationEdge, forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayMapMapMapV" port "grayMapMapMapVec" to "grayMapMapMapVec" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::parallel::ParallelComputationEdge, forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayMapMapMapVec" port "consumers" to "grayMapMapReduceV" port "grayMapMapMapVec"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayMapMapReduceV" port "graySig" to "grayMapMapV" port "graySig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayMapMapV" port "graySig" to "grayMapVB" port "graySig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "grayMapVB" port "graySig" to "graySY" port "graySig"
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge] from "graySY" port "combFunctions" to "grayMapVA" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "grayMapVA" port "kernels" to "grayInterleaveV" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge] from "graySY" port "combFunctions" to "grayMapVB" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "grayMapVB" port "kernels" to "grayMapMapV" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "grayMapMapV" port "kernels" to "grayMapMapMapV" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "grayMapMapV" port "kernels" to "grayMapMapReduceV" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "grayMapMapReduceV" port "kernels" to "floatAdd" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "grayMapMapMapV" port "kernels" to "intDivisionto3" 
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "graySig" port "consumers" to "resizeSY" port "graySig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "resizeSY" port "resizedSig" to "resizedSig" port "producer"  
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "resizedSig" port "consumers" to "maxBrightnessSY" port "resizedSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "resizedSig" port "consumers" to "minBrightnessSY" port "resizedSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "resizedSig" port "consumers" to "correctionSY" port "resizedSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "maxBrightnessSY" port "maxBrightnessSig" to "maxBrightnessSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "minBrightnessSY" port "minBrightnessSig" to "minBrightnessSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "maxBrightnessSig" port "consumers" to "controlSY" port "maxBrightnessSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "minBrightnessSig" port "consumers" to "controlSY" port "minBrightnessSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "controlSY" port "controlSig" to "controlSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "controlSig" port "consumers" to "correctionSY" port "controlSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "maxBrightnessSig" port "consumers" to "correctionSY" port "maxBrightnessSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "minBrightnessSig" port "consumers" to "correctionSY" port "minBrightnessSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "correctionSY" port "correctedSig" to "correctedSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "correctedSig" port "consumers" to "sobelSY" port "correctedSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "sobelSY" port "sobelSig" to "sobelSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "sobelSig" port "consumers" to "asciiSY" port "sobelSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "asciiSY" port "processedImageSig" to "processedImageSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "graySY" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "resizeSY" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "maxBrightnessSY" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "minBrightnessSY" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "controlSY" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "correctionSY" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "sobelSY" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "asciiSY" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "inSig" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "graySig" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "resizedSig" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "maxBrightnessSig" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "minBrightnessSig" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "controlSig" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "correctedSig" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "sobelSig" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "processedImageSig" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "graySY" port "contained" to "grayMapVA" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "grayMapVA" port "contained" to "grayInterleaveV" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "graySY" port "contained" to "interleavedVec" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "graySY" port "contained" to "grayMapVB" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "grayMapVB" port "contained" to "grayMapMapV" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "grayMapMapV" port "contained" to "grayMapMapMapV" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "grayMapMapV" port "contained" to "grayMapMapReduceV" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "grayMapMapV" port "contained" to "grayMapMapMapVec" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "grayMapMapMapV" port "contained" to "intDivisionto3" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "grayMapMapReduceV" port "contained" to "floatAdd" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "inSig" port "contained" to "inV" 
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "graySig" port "contained" to "grayV" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge] from "inSig" port "dataType" to "inV" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge] from "graySig" port "dataType" to "grayV" 
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "graySig" port "producer" to "graySig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "resizedSig" port "producer" to "resizedSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "maxBrightnessSig" port "producer" to "maxBrightnessSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "minBrightnessSig" port "producer" to "minBrightnessSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "controlSig" port "producer" to "controlSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "correctedSig" port "producer" to "correctedSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "sobelSig" port "producer" to "sobelSig" port "producer"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "processedImageSig" port "producer" to "processedImageSig" port "producer"
+}
