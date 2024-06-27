@@ -1,0 +1,30 @@
+# Build files
+/dist/
+/build/
+/out/
+
+# Dependency directories
+/node_modules/
+__pycache__/
+/target/
+
+# Configuration files
+.env
+*.local
+
+# IDE-specific files
+.vscode/
+/.idea/
+
+# System files
+Thumbs.db
+.DS_Store
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# Secret files
+secrets.json
+
