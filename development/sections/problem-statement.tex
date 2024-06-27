@@ -1,0 +1,31 @@
+
+\section{Problem Statement}
+\label{sec:problem-statement}
+
+%Embedded systems need more automated and efficient system development methodologies to enable capability growth, and thereby increased complexity with retained acceptable development cost and time. Current design flows for conceptual system development, down to hardware and software development, do not have a clear path from the functional specification down to the final implementation and cannot provide guarantees on performance metrics early at the conceptual phase. 
+
+
+
+%From aeronautics industry point of view, such systems need more automated and efficient system development methodologies to enable capability growth and thereby increased complexity with retained acceptable development cost and time. The avionics system based on electronics and software is a prerequisite for an aircraft’s general functions. Current design flows for conceptual system development, down to hardware (electronics) and software (code) development, do not have a clear path from the functional specification down to the final implementation and cannot provide real-time guarantees early at the conceptual phase. hallenges with the never-ending growth in number of functions as well as their complexity in an aircraft and the architecture change from several dedicated resources for each function to shared heterogeneous resources connected in a network with computation nodes and I/O enforces the necessity to increase the use of formal methodologies applied at early conceptual design. Thereby move focus away from the today often seen on low-level simulation, analysis, and verification. It is also essential to address the recognized challenge that early system design decisions, combined with lack of experience and continued follow-up on foreseen resource needs, often lead to very late and costly changes in the overall architecture. Suggested industrial design flow with specifications written in a formal language allow automated verification process to start early in the design process and at high abstraction levels without the need to code several new verification models. This enables an integrated design flow from specification to a completed system that can be completely validated at each step between abstraction levels, e.g., refined estimates on resource needs.
+ 
+From a more general and, in the mean time, detailed view of system design process,  verification  cost  is  a  major  part  of  embedded system design costs, especially for systems with compulsory certification requirements, as a consequence of the increasing  tendency  for  taking  advantage  of  high-performance  and  cost-effectiveness  of  complex  heterogeneous  systems-on-chips  (SoC).  The  common technique  for  verification  is  simulation  which  is  a time-consuming  and  costly  technique, especially for real-world tests that even can not be done till late stages.  Instead,  formal  verification  is  a  promising  method  to  alleviate the burden  of  verification.  Formal  system  design  approach is  recognized  as  the  first  step towards this  aim.    It  starts  with  a formal  specification model at  a  high  level  of  abstraction  which  is free from implementation details and, therefore, is easy to verify.  Also, the simplification causes designers to focus their effort on the functionality of the  system,  which  in  turns  increases  the  accuracy  of the specification modeling phase.  Moreover, the simpler model, the less complex verification technique is needed.  On the  other hand,  the higher  abstraction level, the larger gap is made between the specification and  the  implementation  model.  However,  the  implementation details are of great importance to reduce the design space and achieve an efficient implementation.  As a result, they should be added step wisely during a transformational  refinement  process. 
+%Each step of this process is an effort to add one of the required properties, e.g., constraints and performance indexes,  given  in  the requirement  specification,  to  a system  model  at  one  abstraction  level  and  produce another model at the same or lower abstraction level. Design space reduction is also one of the achievements of this process. 
+Preserving properties during the transformations is another challenge that the underlying transformation methodology should deal with. In this study, we introduce a transformation-based design methodology  to address all the mentioned challenges. The proposed methodology is an efficient development approach and increases the level of automation. It has a clear path from the functional specification down to the final implementation and can provide guarantees on performance metrics early at the conceptual phase. Another recognized design challenge in industry that the introduced methodology meet is that early system design decisions, combined with lack of experience and continued follow-up on foreseen resource needs, often lead to very late and costly changes in the overall architecture. Thanks to transformational desgin view exploited in our methodology, design decisions are made early in the design process, and verification process starts at higher abstraction levels without the need to code several new verification models. This enables an integrated design flow from specification to a physical implementation that can be completely validated at each step between abstraction levels.
+
+
+
+%Figure illustrate the step wise process and its effect on the design space.
+
+
+%\begin{figure}[htbp]
+%  \centering
+%  \scalebox{0.8}{\input{\pathFigures/abstraction-gap-refinement.pdf_t}}
+%  \caption{The synthesis process is a stepwise refinement from a high-level specification model into a final implementation}
+%  \label{fig:abstraction-gap-refinement}
+%\end{figure}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:

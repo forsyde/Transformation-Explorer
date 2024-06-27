@@ -1,0 +1,78 @@
+\section{Introduction}
+\label{sec:introduction} 
+
+%model-based design
+%The aim of transform is to 1) add the implementation-dependent details, and 2) reach to an efficient implementation. 
+%transform rules for one app or set of apps. 
+%One transformation step should define the network between the nodes
+%When there are set of apps, we can consider that the platform is a NoC and one node is for the first app and the rest of the nodes are for the rest of apps. 
+%model-based process leading from requirements to implementations \cite{sifakis2014rigorous}.
+% while verifying at every step that the design properties  hold \cite{ungureanu2019formal}.
+%The underlying MoC in this paper is SDF. Apps which are considered here are Data Flow applications.
+%top down transformation methodology for a predictable system design.
+%"good enough" solution or "optimal" solution
+
+% Safety-critical embedded systems have undergone a revolution over recent decades;
+The design process of safety-critical embedded systems has become very challenging due to increasing functionality and additional demands on safety and performance.
+Raising the level of abstraction is regarded as an important technique to manage the complexity of designing today's systems, as it is easier  to  capture  the functionality  of  the  system  at the  higher abstraction  levels. Although this approach has many potential  benefits,  including  decreasing  verification time and costs and  potentially increasing  the degree  of  automation,  it  widens the  gap  between specification and implementation. Naturally, high-level  specification  models  lack  implementation  details, which have to be added during the design process.
+% Indeed,  since \emph{implementation-dependent requirements} increase the complexity of the high level specification model, they must be added step wisely during the design process.
+A  promising technique to systematically add information, requirements and details to the initial model and fill the gap is to use a transformation-based  approach. This is also supported by the arguments of \cite{kahng2009orion}, stating that \textquote{high-level optimizations have been shown to have much more significant impact on power than low-level optimizations.}
+%high level design decisions, have been proved to have much more effect on the  ultimate design rather than the lower ones
+%\inlineisa{Check quote!}
+
+
+%In this work, an extension of the transformational system design methodology introduced in \cite{sander2004system} is developed for the entire design process of predictable systems, from a high abstraction level down to the lower levels.
+%In the proposed methodology, the high level design decisions, that have been proved \textquote{to have much more effect on the  ultimate design rather than the lower ones} \cite{kahng2009orion}, are made earlier to avoid iterations of common system design methods like V-model \cite{forsberg1991relationship} and Y-chart \cite{grout2011digital}. 
+
+The proposed methodology in this paper extends the rule-based transformation approach presented in \cite{sander2004system}. Potential transformations can be identified using \emph{patterns}, which together with the \emph{transformed patterns} are part of the transformation rules.
+% The \emph{transformed patterns} are also defined in the transformation rules.
+A \emph{pattern recognition} method is developed and adopted to detect possible transformations in each step of the design process. The specification model is transformed based on the transformed pattern defined in the applied transformations. Finally, having all options for transformation, the sequence of transformations that makes the best trade-off between different performance metrics, is selected from the candidate sequences of transformations that preserve requirements. Early-stage design space exploration (DSE) in conjunction with traditional DSE techniques are leveraged for this aim.
+In the proposed transformational design flow, the whole system model including an \emph{application model}, a \emph{platform model}, a \emph{mapping model}, and  \emph{requirements} is transformed in each step of the design process. By this, a larger part of the design space is traversed, and the possibility to obtain an efficient implementation is vastly improved compared to earlier approaches that only transform the application model \cite{sander2004system} or the platform model \cite{nuzzo2015platform}. To fulfill this aim, the following novel concepts and techniques are introduced:
+%the conceptual requirements, i.e., system requirements, and \emph{refined requirements}, i.e., requirements estimated and extracted from the high-level functional specification of the system by the expert designers and the estimation of available performance of the foreseen computation resources and network topology.
+
+\begin{itemize}[leftmargin=*]
+	\setlength{\parskip}{1pt} 
+	\setlength{\itemsep}{0pt plus 0pt}
+ \item \textbf{System model transformation:} To obtain an efficient implementation, a good match between application and platform is key. Thus, transformations can be applied on all parts of the systems model, consisting of \emph{requirements}, \emph{application model}, \emph{platform model}, and \emph{mapping model}.
+ \item \textbf{Pattern recognition:} Apart from the highly addressed research problem of how to verify the correctness of a transformation
+   % , i.e., if the transformed model preserves the properties
+   \cite{broy2012specification, nuzzo2015platform}, it is vital to be aware of all possible transformations in each transformation step. To achieve this aim, a pattern recognition technique is introduced and leveraged for a semi-formal rule-based transformational design approach.
+    \item \textbf{Transforming requirements:} In each transformation step, the requirements must match the transformed system model. This requires both decomposing the requirements according to the new subsystems and adding implementation-dependent requirements resulting from design decisions.
+\end{itemize}
+
+%\vspace{-0.1in}
+%\begin{itemize}
+%    \item \textbf{Transformational  ment  methodology:} We propose a methodology for step-wise transformational system design.  The starting point of the transformational flow is a well-defined formal specification model undergoing several refinement steps and ending with a synthesizable implementation model. \emph{Refined requirements} and \emph{parallel transformation} of the application specification model, the platform model, and the mapping, as well as the requirements/constraints are very important concepts introduced and used in the proposed methodology.
+%    \item \textbf{Transformation strategy:} We define which transformations, in which order, should be applied to provide an efficient implementation preserving all the requirements. To identify possible transformations, a \emph{pattern matching} technique is introduced.
+%    \item \textbf{Platform refinement:} This section will be completed in the final version of the document (deliverable D3.3).
+%    \item \textbf{Categorization of transformation rules:} This section will be completed in the final version of the document (deliverable D3.3).
+%    \item %should be corrected
+%    \textbf{Testing the proposed methodology:} The usage and potential of the presented transformational system design  is exemplified by ForSyDe (Formal System Design) modeling framework and tools \cite{sander2003system}, as well as the interface modeling framework proposed by \cite{hendriks2020interface}. The key insight of using examples is to show the effectiveness of the refinements enabled thanks to our transformational design flow in a broad range of applications.
+%    \item \textbf{Reliability:}
+%\end{itemize}
+
+%Table \ref{terminology} defines the terminology used in this paper. 
+
+
+%model-based development
+% a systematic formal methodology
+The scope of the paper is to introduce a semi-formal transformation-based technique for different application domains wrapped in a systematic design methodology to keep a uniform and functional view of the design, where also non-functional requirements are captured.
+% Moreover, this paper investigates the methodological issues of transformation-based development.
+We aim for a semi-formal and semi-automated design methodology and to lay its foundations in this work; detailed suggestions and tool support  of the transformations will be addressed in future work. 
+
+The paper uses a tutorial, but representative example, to illustrate the central concepts and techniques introduced and developed in this work. The main objectives are to 1) show the effectiveness of our integrated methodology, 2) clarify its viewpoint on system design as a series of transformations, 3) demonstrate the level of design automation can be increased. 
+%It should be noted that in the current work, the terms ``transformation'' and ``refinement" are used interchangeably. 
+
+%The rest of the paper is organized as follows. Section~\ref{sec:system model} describes the system model.
+%followed by the problem statement in Section~\ref{sec:problem-statement}. 
+%Our proposed transformational system design methodology is detailed and exemplified in Section \ref{sec:transform-methodology}. 
+%Transformation rules are classified and explained in Section \ref{sec:classification}. 
+%The usage of the introduced methodology is illustrated by tutorial examples in Section \ref{sec:test}. 
+%Section~\ref{sec:related-work} investigates the related work in detail and,
+%Finally, a conclusion is given in Section~\ref{sec:conclusion}.  
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:

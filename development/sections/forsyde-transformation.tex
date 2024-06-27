@@ -1,0 +1,63 @@
+\section{ForSyDe Transformation Approach}
+\label{sec:forsyde-transformation-approach}
+
+In this section, the general view of the ForSyDe transformation approach is explained. ForSyDe is a design methodology which its main goal is to raise the level of abstraction as a promising approach to overcome the problems of escalating complexity and rising heterogeneity of SoC and Cyber-Physical-Systems (CPSs) \cite{sander2017forsyde}. The functional programming paradigm and the theory of Model of Computations (MoCs) lay the foundations for the ForSyDe. In particular, the
+higher abstraction level is achieved by exploiting the potential of the higher-order functions in functional programming, which provide the opportunity to abstract over processes \cite{sander2003system}.
+
+
+
+\begin{figure}[htbp]
+  \centering
+  \scalebox{0.7}{\input{\pathFigures/forsyde-transformational-design-flow.pdf_t}}
+  \caption{The ForSyDe design flow}
+  \label{fig:forsyde-transformational-design-flow}
+\end{figure}
+
+
+\begin{figure}[htbp]
+  \centering
+  \input{\pathFigures/transformational-design-refinement.pdf_t}
+  \caption{Transformational design refinement}
+  \label{fig:transformational-design-refinement}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \input{\pathFigures/design-transformation-step.pdf_t}
+  \caption{Design transformation step}
+  \label{fig:design-transformation step}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{\pathFigures/map-merge.pdf_t}
+  \caption{Illustration of the transformation rule \textit{MapMerge}}
+  \label{fig:map-merge}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \scalebox{0.8}{\input{\pathFigures/balanced-tree.pdf_t}}
+  \caption{Illustration of the transformation rule $\mathit{BalancedTree}$}
+  \label{fig:balanced-tree}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \scalebox{0.7}{\mbox{\input{\pathFigures/pipelined-tree.pdf_t}}}
+  \caption{Illustration of the transformation rule \textit{PipelinedTree}}
+  \label{fig:pipelined-tree}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \scalebox{0.7}{\mbox{\input{\pathFigures/balanced-pipelined-tree.pdf_t}}}
+  \caption{Combining \textit{BalancedTree} and \textit{PipelinedTree}}
+  \label{fig:balanced-pipelined-tree}
+\end{figure}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End:
