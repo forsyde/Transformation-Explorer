@@ -1,0 +1,889 @@
+systemgraph {
+  vertex "threshold1"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, threshold1Sig, Ired)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+      	"comparison": 64_l      
+      }
+    },
+    "maxSizeInBits": {
+    	"impl1": 0_l
+    },
+    "outputPorts": [
+      "threshold1Sig"
+    ],
+    "inputPorts": [
+      "Ired"
+    ]
+  }
+  vertex "threshold1MapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, threshold1Sig, Ired, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+      	"comparison": 64_l       
+      }
+    },
+    "maxSizeInBits": {
+    	"impl1": 0_l
+    },
+    "outputPorts": [
+      "threshold1Sig"
+    ],
+    "inputPorts": [
+      "Ired"
+    ]
+  }
+vertex "threshold1MapMapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, threshold1Sig, Ired, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+      	"comparison": 8_l
+      }
+    },
+    "maxSizeInBits": {
+    	"impl1": 0_l
+    },
+    "outputPorts": [
+      "threshold1Sig"
+    ],
+    "inputPorts": [
+      "Ired"
+    ]
+  }  
+  vertex "threshold"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::implementation::code::HasANSICImplementations, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::ANSICBlackBoxExecutable, impl::InstrumentedExecutable, visualization::VisualizableWithProperties]
+  (value, res)
+  {
+    "visualizedPropertiesNames": [
+      "inlinedCode"
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "comparison": 1_l
+      }
+    },
+    "maxSizeInBits": {
+      "impl1": 0_l
+    },
+    "outputArgumentPorts": [
+      "res"
+    ],
+    "returnPort": "res",
+    "inlinedCodes": {
+      "generic": "res = value > lambda ? 1 : 0;"
+    },
+    "inlinedCode": "res = value > lambda ? 1 : 0;",
+    "outputPorts": [
+      "res"
+    ],
+    "inputPorts": [
+      "value"
+    ],
+    "inputArgumentPorts": [
+      "value"
+    ],
+    "operationRequirements": {
+      "impl1": {
+        "comparison": 1_l
+      }
+    },
+    "sizeInBits": 0_l
+  }
+  
+  vertex "threshold2"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, threshold2Sig, Iblue)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+      "comparison": 64_l      
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "threshold2Sig"
+    ],
+    "inputPorts": [
+      "Iblue"
+    ]
+  }
+  vertex "threshold2MapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, threshold2Sig, Iblue, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+      "comparison": 64_l       
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "threshold2Sig"
+    ],
+    "inputPorts": [
+      "Iblue"
+    ]
+  }
+  
+vertex "threshold2MapMapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, threshold2Sig, Iblue, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+	"comparison": 8_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "threshold2Sig"
+    ],
+    "inputPorts": [
+      "Iblue"
+    ]
+  }  
+    
+  vertex "threshold3"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, threshold3Sig, Igreen)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+      	"comparison": 64_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "threshold3Sig"
+    ],
+    "inputPorts": [
+      "Igreen"
+    ]
+  }
+  vertex "threshold3MapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, threshold3Sig, Igreen, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+       	"comparison": 64_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "threshold3Sig"
+    ],
+    "inputPorts": [
+      "Igreen"
+    ]
+  }
+  
+vertex "threshold3MapMapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, threshold3Sig, Igreen, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+	"comparison": 8_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "threshold3Sig"
+    ],
+    "inputPorts": [
+      "Igreen"
+    ]
+  }  
+
+  vertex "multiplyBands"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, threshold1Sig, threshold2Sig, threshold3Sig, multiplyBandsSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+      	"intMulti": 128_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "multiplyBandsSig"  
+    ],
+    "inputPorts": [
+      "threshold1Sig",
+      "threshold2Sig",
+      "threshold3Sig"    
+    ]
+  }  
+  vertex "multiplyBandsMapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, threshold1Sig, threshold2Sig, threshold3Sig, multiplyBandsSig, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+       	"intMulti": 128_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "multiplyBandsSig"
+    ],
+    "inputPorts": [
+      "threshold1Sig",
+      "threshold2Sig",
+      "threshold3Sig"
+    ]
+  }
+  
+  vertex "multiplyBandsMapMapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, threshold1Sig, threshold2Sig, threshold3Sig, multiplyBandsSig, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+       	"intMulti": 16_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "multiplyBandsSig"
+    ],
+    "inputPorts": [
+      "threshold1Sig",
+      "threshold2Sig",
+      "threshold3Sig"
+    ]
+  }
+  
+  vertex "intMult"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::implementation::code::HasANSICImplementations, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::ANSICBlackBoxExecutable, impl::InstrumentedExecutable, visualization::VisualizableWithProperties]
+  (a, b, c, res)
+  {
+    "visualizedPropertiesNames": [
+      "inlinedCode"
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "intMulti": 2_l
+      }
+    },
+    "maxSizeInBits": {
+      "impl1": 0_l
+    },
+    "outputArgumentPorts": [
+      "res"
+    ],
+    "returnPort": "res",
+    "inlinedCodes": {
+      "generic": "res = a*b*c;"
+    },
+    "inlinedCode": "res = a*b*c;",
+    "outputPorts": [
+      "res"
+    ],
+    "inputPorts": [
+      "a",
+      "b",
+      "c"
+    ],
+    "inputArgumentPorts": [
+      "a",
+      "b",
+      "c"
+    ],
+    "operationRequirements": {
+      "impl1": {
+        "intMulti": 2_l
+      }
+    },
+    "sizeInBits": 0_l
+  }
+
+  vertex "summation"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, multiplyBandsSig, summationSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+      	"intAdd": 48_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "summationSig"
+    ],
+    "inputPorts": [
+      "multiplyBandsSig"
+    ]
+  }
+  vertex "summationMapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, multiplyBandsSig, summationSig, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+       	"intAdd": 48_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "summationSig"
+    ],
+    "inputPorts": [
+      "multiplyBandsSig"
+    ]
+  } 
+  
+  vertex "summationMapReduceV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::ReduceV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::ReduceV, visualization::GreyBox]
+  (contained, multiplyBandsSig, summationSig, kernels)
+  {
+    "inputArray": "grayMapMapMapVec",
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+	"intAdd": 3_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "summationSig"
+    ],
+    "inputPorts": [
+      "multiplyBandsSig"
+    ],
+    "outputScalar": "summationSig"
+  }
+  
+   vertex "intAdd"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::implementation::code::HasANSICImplementations, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::ANSICBlackBoxExecutable, impl::InstrumentedExecutable, visualization::VisualizableWithProperties]
+  (res, a, b)
+  {
+    "visualizedPropertiesNames": [
+      "inlinedCode"
+    ],
+    "computationalRequirements": {
+      "impl1": {
+        "intAdd": 1_l
+      }
+    },
+    "maxSizeInBits": {
+      "impl1": 0_l
+    },
+    "outputArgumentPorts": [
+      "res"
+    ],
+    "returnPort": "res",
+    "inlinedCodes": {
+      "generic": "res = a+b;"
+    },
+    "inlinedCode": "res = a+b;",
+    "outputPorts": [
+      "res"
+    ],
+    "inputPorts": [
+      "a",
+      "b"
+    ],
+    "inputArgumentPorts": [
+      "a",
+      "b"
+    ],
+    "operationRequirements": {
+      "impl1": {
+        "intAdd": 1_l
+      }
+    },
+    "sizeInBits": 0_l
+  } 
+ 
+ 
+   vertex "threshold4"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::moc::sy::SYMap, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, moc::sy::SYMap, visualization::GreyBox]
+  (combFunctions, contained, summationSig, outSig)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+      	"comparison": 16_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "outSig"
+    ],
+    "inputPorts": [
+      "summationSig"
+    ]
+  }
+  vertex "threshold4MapV"
+  [forsyde::io::lib::hierarchy::behavior::BehaviourEntity, forsyde::io::lib::hierarchy::behavior::FunctionLikeEntity, forsyde::io::lib::hierarchy::behavior::parallel::MapV, forsyde::io::lib::hierarchy::implementation::functional::InstrumentedBehaviour, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::Executable, parallel::MapV, visualization::GreyBox]
+  (contained, summationSig, outSig, kernels)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "computationalRequirements": {
+      "impl1": {
+       	"comparison": 16_l
+      }
+    },
+    "maxSizeInBits": {"impl1": 0_l},
+    "outputPorts": [
+      "outSig"
+    ],
+    "inputPorts": [
+      "summationSig"
+    ]
+  }
+  
+  vertex "Ired"
+  [forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (contained, dataType, input, output)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "sizeInBits": 0_l
+  }
+  vertex "IredV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      8_i,
+      8_i
+    ],
+    "sizeInBits": 0_l
+  }  
+  
+   vertex "Iblue"
+  [forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (contained, dataType, input, output)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "sizeInBits": 0_l
+  }
+  vertex "IblueV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      8_i,
+      8_i
+    ],
+    "sizeInBits": 0_l
+  }  
+  
+  vertex "Igreen"
+  [forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (contained, dataType, input, output)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "sizeInBits": 0_l
+  }
+  vertex "IgreenV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      8_i,
+      8_i
+    ],
+    "sizeInBits": 0_l
+  }  
+  
+  vertex "threshold1Sig"
+  [forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (contained, dataType, input, output)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "sizeInBits": 0_l
+  }
+  vertex "threshold1SigV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      8_i,
+      8_i
+    ],
+    "sizeInBits": 0_l
+  }  
+  
+  vertex "threshold2Sig"
+  [forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (contained, dataType, input, output)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "sizeInBits": 0_l
+  }
+  vertex "threshold2SigV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      8_i,
+      8_i
+    ],
+    "sizeInBits": 0_l
+  }    
+  
+  vertex "threshold3Sig"
+  [forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (contained, dataType, input, output)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "sizeInBits": 0_l
+  }
+  vertex "threshold3SigV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      8_i,
+      8_i
+    ],
+    "sizeInBits": 0_l
+  }    
+  
+  vertex "multiplyBandsSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (contained, dataType, input, output)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "sizeInBits": 0_l
+  }
+  vertex "multiplyBandsSigV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      16_i,
+      4_i
+    ],
+    "sizeInBits": 0_l
+  }  
+  
+  vertex "summationSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (contained, dataType, input, output)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "sizeInBits": 0_l
+  }
+  vertex "summationSigV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      16_i
+    ],
+    "sizeInBits": 0_l
+  }   
+  
+  vertex "outSig"
+  [forsyde::io::lib::hierarchy::behavior::moc::sy::SYSignal, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::GreyBox, impl::DataBlock, moc::sy::SYSignal, visualization::GreyBox]
+  (contained, dataType, input, output)
+  {
+    "visualizedPropertiesNames": [
+
+    ],
+    "maxSizeInBits": 0_l,
+    "sizeInBits": 0_l
+  }
+  vertex "outSigV"
+  [forsyde::io::lib::hierarchy::behavior::parallel::Vectorizable, forsyde::io::lib::hierarchy::implementation::functional::RegisterLike, forsyde::io::lib::hierarchy::visualization::VisualizableWithProperties, impl::DataBlock, parallel::Vectorizable, visualization::VisualizableWithProperties]
+  (input, output)
+  {
+    "visualizedPropertiesNames": [
+      "dimensions"
+    ],
+    "maxSizeInBits": 0_l,
+    "dimensions": [
+      16_i
+    ],
+    "sizeInBits": 0_l
+  }   
+  
+ vertex "application"
+  [forsyde::io::lib::hierarchy::visualization::GreyBox, visualization::GreyBox]
+  (contained)
+  {}
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "Ired" port "input" to "IredV" port "input"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "IredV" port "output" to "Ired" port "output"  
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "Iblue" port "input" to "IblueV" port "input"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "IblueV" port "output" to "Iblue" port "output"  
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "Igreen" port "input" to "IgreenV" port "input"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "IgreenV" port "output" to "Igreen" port "output"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold1Sig" port "input" to "threshold1SigV" port "input"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold1SigV" port "output" to "threshold1Sig" port "output"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold2Sig" port "input" to "threshold2SigV" port "input"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold2SigV" port "output" to "threshold2Sig" port "output"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold3Sig" port "input" to "threshold3SigV" port "input"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold3SigV" port "output" to "threshold3Sig" port "output"  
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsSig" port "input" to "multiplyBandsSigV" port "input"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsSigV" port "output" to "multiplyBandsSig" port "output"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "summationSig" port "input" to "summationSigV" port "input"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "summationSigV" port "output" to "summationSig" port "output"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "outSig" port "input" to "outSigV" port "input"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "outSigV" port "output" to "outSig" port "output"
+  
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "Ired" port "output" to "threshold1" port "Ired"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold1" port "threshold1Sig" to "threshold1Sig" port "input"
+  
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "Iblue" port "output" to "threshold2" port "Iblue"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold2" port "threshold2Sig" to "threshold2Sig" port "input"
+  
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "Igreen" port "output" to "threshold3" port "Igreen"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold3" port "threshold3Sig" to "threshold3Sig" port "input"
+  
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold1Sig" port "output" to "multiplyBands" port "threshold1Sig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold2Sig" port "output" to "multiplyBands" port "threshold2Sig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold3Sig" port "output" to "multiplyBands" port "threshold3Sig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBands" port "multiplyBandsSig" to "multiplyBandsSig" port "input"
+  
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsSig" port "output" to "summation" port "multiplyBandsSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "summation" port "summationSig" to "summationSig" port "input"
+  
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "summationSig" port "output" to "threshold4" port "summationSig"
+  edge [forsyde::io::lib::hierarchy::behavior::moc::sy::SYNetworkEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold4" port "outSig" to "outSig" port "input"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold1" port "Ired" to "threshold1MapV" port "Ired"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold1MapV" port "Ired" to "threshold1MapMapV" port "Ired"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold1MapMapV" port "Ired" to "threshold" port "value"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold1MapMapV" port "threshold1Sig" to "threshold1MapV" port "threshold1Sig"  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold1MapV" port "threshold1Sig" to "threshold1" port "threshold1Sig" 
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold2" port "Iblue" to "threshold2MapV" port "Iblue"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold2MapV" port "Iblue" to "threshold2MapMapV" port "Iblue"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold2MapMapV" port "Iblue" to "threshold" port "value"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold2MapMapV" port "threshold2Sig" to "threshold2MapV" port "threshold2Sig"  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold2MapV" port "threshold2Sig" to "threshold2" port "threshold2Sig" 
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold3" port "Igreen" to "threshold3MapV" port "Igreen"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold3MapV" port "Igreen" to "threshold3MapMapV" port "Igreen"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold3MapMapV" port "Igreen" to "threshold" port "value"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold3MapMapV" port "threshold3Sig" to "threshold3MapV" port "threshold3Sig"  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold3MapV" port "threshold3Sig" to "threshold3" port "threshold3Sig" 
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBands" port "threshold1Sig" to "multiplyBandsMapV" port "threshold1Sig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBands" port "threshold2Sig" to "multiplyBandsMapV" port "threshold2Sig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBands" port "threshold3Sig" to "multiplyBandsMapV" port "threshold3Sig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsMapV" port "threshold1Sig" to "multiplyBandsMapMapV" port "threshold1Sig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsMapV" port "threshold2Sig" to "multiplyBandsMapMapV" port "threshold2Sig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsMapV" port "threshold3Sig" to "multiplyBandsMapMapV" port "threshold3Sig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsMapMapV" port "threshold1Sig" to "intMult" port "a"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsMapMapV" port "threshold2Sig" to "intMult" port "b"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsMapMapV" port "threshold3Sig" to "intMult" port "c"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsMapMapV" port "multiplyBandsSig" to "multiplyBandsMapV" port "multiplyBandsSig"  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "multiplyBandsMapV" port "multiplyBandsSig" to "multiplyBands" port "multiplyBandsSig" 
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "summation" port "multiplyBandsSig" to "summationMapV" port "multiplyBandsSig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "summationMapV" port "multiplyBandsSig" to "summationMapReduceV" port "multiplyBandsSig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "summationMapReduceV" port "summationSig" to "summationMapV" port "summationSig"  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "summationMapV" port "summationSig" to "summation" port "summationSig" 
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold4" port "summationSig" to "threshold4MapV" port "summationSig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold4MapV" port "summationSig" to "threshold" port "value"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualConnection] from "threshold4MapV" port "outSig" to "threshold4" port "outSig"
+  
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge] from "threshold1" port "combFunctions" to "threshold1MapV"  
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge] from "threshold2" port "combFunctions" to "threshold2MapV"  
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge] from "threshold3" port "combFunctions" to "threshold3MapV"  
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge] from "multiplyBands" port "combFunctions" to "multiplyBandsMapV"  
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge] from "summation" port "combFunctions" to "summationMapV"  
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge] from "threshold4" port "combFunctions" to "threshold4MapV"  
+  
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "threshold1MapV" port "kernels" to "threshold1MapMapV" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "threshold2MapV" port "kernels" to "threshold2MapMapV" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "threshold3MapV" port "kernels" to "threshold3MapMapV"
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "threshold1MapMapV" port "kernels" to "threshold" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "threshold2MapMapV" port "kernels" to "threshold" 
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "threshold3MapMapV" port "kernels" to "threshold"
+   
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "multiplyBandsMapV" port "kernels" to "multiplyBandsMapMapV"
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "multiplyBandsMapMapV" port "kernels" to "intMult"
+  
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "summationMapV" port "kernels" to "summationMapReduceV"
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "summationMapReduceV" port "kernels" to "intAdd"
+  
+  edge [forsyde::io::lib::hierarchy::behavior::BehaviourCompositionEdge,forsyde::io::lib::hierarchy::visualization::VisualConnection,parallel::ParallelContainerEdge] from "threshold4MapV" port "kernels" to "threshold" 
+
+
+
+  
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "Ired"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "Igreen"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "Iblue"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "threshold1Sig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "threshold2Sig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "threshold3Sig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "multiplyBandsSig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "summationSig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "outSig"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "threshold1"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "threshold2"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "threshold3"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "multiplyBands"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "summation"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "application" port "contained" to "threshold4"
+    
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "Ired" port "contained" to "IredV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "Iblue" port "contained" to "IblueV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "Igreen" port "contained" to "IgreenV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold1Sig" port "contained" to "threshold1SigV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold2Sig" port "contained" to "threshold2SigV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold3Sig" port "contained" to "threshold3SigV"  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "multiplyBandsSig" port "contained" to "multiplyBandsSigV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "summationSig" port "contained" to "summationSigV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "outSig" port "contained" to "outSigV"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold1" port "contained" to "threshold1MapV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold1MapV" port "contained" to "threshold1MapMapV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold1MapMapV" port "contained" to "threshold"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold2" port "contained" to "threshold2MapV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold2MapV" port "contained" to "threshold2MapMapV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold2MapMapV" port "contained" to "threshold"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold3" port "contained" to "threshold3MapV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold3MapV" port "contained" to "threshold3MapMapV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold3MapMapV" port "contained" to "threshold"
+
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "multiplyBands" port "contained" to "multiplyBandsMapV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "multiplyBandsMapV" port "contained" to "multiplyBandsMapMapV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "multiplyBandsMapMapV" port "contained" to "intMult"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "summation" port "contained" to "summationMapV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "summationMapV" port "contained" to "summationMapReduceV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "summationMapReduceV" port "contained" to "intAdd"
+  
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold4" port "contained" to "threshold4MapV"
+  edge [forsyde::io::lib::hierarchy::visualization::VisualContainment] from "threshold4MapV" port "contained" to "threshold"
+
+  
+  
+  
+  
+  
+ 
+}
