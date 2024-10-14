@@ -13,7 +13,9 @@ systemgraph {
         "cpy": 3072_l
       }
     },
-    "maxSizeInBits": {},
+    "maxSizeInBits": {
+      "impl1": 0_l
+    },
     "outputPorts": [
       "graySig"
     ],
