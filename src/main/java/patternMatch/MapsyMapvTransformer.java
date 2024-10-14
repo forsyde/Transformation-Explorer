@@ -42,18 +42,8 @@ public class MapsyMapvTransformer implements Transformer {
             ForSyDeHierarchy.SYMap.tryView(systemGraph, v).ifPresent(syMap -> {
                 syMaps.add(syMap);
 
-                int inPortNum = 0;
-                for (EdgeInfo e : systemGraph.incomingEdgesOf(v)) {
-                    if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.SYNetworkEdge)) {
-                        inPortNum += 1;
-                    }
-                }
-                int outPortNum = 0;
-                for (EdgeInfo e : systemGraph.outgoingEdgesOf(v)) {
-                    if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.SYNetworkEdge)) {
-                        outPortNum += 1;
-                    }
-                }
+                int inPortNum = syMap.inputPorts().size();
+                int outPortNum = syMap.outputPorts().size();
 
                 //System.out.println(v.getIdentifier() + ", inputs is " + inPortNum + ", and output is " + outPortNum);
 
