@@ -1,8 +1,10 @@
 package patternMatch;
 
 import forsyde.io.core.SystemGraph;
+import forsyde.io.core.Vertex;
 import forsyde.io.core.ModelHandler;
 import forsyde.io.lib.hierarchy.ForSyDeHierarchy;
+import forsyde.io.lib.LibForSyDeModelHandler;
 import forsyde.io.lib.TraitNamesFrom0_6To0_7;
 import forsyde.io.visual.kgt.drivers.KGTDriver;
 
@@ -10,8 +12,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
-import java.util.Scanner;
-
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,11 +27,29 @@ public class PatternMatcher {
         MapsyReducevTransformer mapsyReducevTransformer = new MapsyReducevTransformer();
         ParameterizedMapsyMapvTransformer parameterizedMapsyMapvTransformer = new ParameterizedMapsyMapvTransformer();
 
-        ModelHandler modelHandler = new ModelHandler().registerTraitHierarchy(new ForSyDeHierarchy()).registerDriver(new KGTDriver()).registerSystemGraphMigrator(new TraitNamesFrom0_6To0_7());
-        SystemGraph SystemGraph = modelHandler.loadModel(Paths.get("imageProcessingSY-gray.fiodl"));
+        ModelHandler modelHandler = LibForSyDeModelHandler.registerLibForSyDe(new ModelHandler()).registerDriver(new KGTDriver());
+        SystemGraph systemGraph = modelHandler.loadModel(Paths.get("imageProcessingSY-gray.fiodl"));
+        // HOTFIX --------------- HACK ALERT!!!
+        // due to the problems with latest 0.7.19+ in its stricter forsyde models
+        for (Vertex v : systemGraph.vertexSet()) {
+            ForSyDeHierarchy.InstrumentedSoftwareBehaviour.tryView(systemGraph, v).ifPresent(ins -> {
+                for (var implName: ins.computationalRequirements().keySet()) {
+                    if (!ins.maxSizeInBits().containsKey(implName)) {
+                        var old = ins.maxSizeInBits();
+                        old.put(implName, 0L); // add a zer ovalue so that nor FIO nor IDeSyDe complains. 
+                        // NOTE: This is HACK!! Ideally, you would already have this information
+                        // coming from the system graph. Luckily, this hack part of the code only
+                        // gets activated if the information is missing, so no actual information
+                        // is ever lost... only mock ones created.
+                        ins.maxSizeInBits(old);
+                    }
+                }
+            });
+        }
+        // HOTFIX END --------------- HACK ALERT!!!  
         //SystemGraph SystemGraph = modelHandler.loadModel(Paths.get("imageProcessing_migrated.fiodl"));
         //SystemGraph SystemGraph = modelHandler.loadModel(Paths.get("imageProcessing_migrated_gray_hierarchy.fiodl"));
-        transformedGraphsSearchTree.add(SystemGraph);
+        transformedGraphsSearchTree.add(systemGraph);
         //SystemGraph SystemGraph = ModelHandler.loadModel(Paths.get("maxBrightnessSY_transformed.fiodl"));
         //SystemGraph SystemGraph = ModelHandler.loadModel(Paths.get("maxBrightnessMapVtransformedSY_transformed.fiodl"));
         //SystemGraph SystemGraph = ModelHandler.loadModel(Paths.get("maxBrightnessMapVtransformedSYtransformedSY0_transformed.fiodl"));
@@ -44,13 +62,33 @@ public class PatternMatcher {
             SystemGraph graph = transformedGraphsSearchTree.poll();
             int transformedGraphsSearchTreeSize = transformedGraphsSearchTree.size();
             if (graph instanceof NamedSystemGraph) {
+                for (Vertex v : systemGraph.vertexSet()) {
+                    ForSyDeHierarchy.InstrumentedSoftwareBehaviour.tryView(systemGraph, v).ifPresent(ins -> {
+                        for (var implName: ins.computationalRequirements().keySet()) {
+                            if (!ins.maxSizeInBits().containsKey(implName)) {
+                                var old = ins.maxSizeInBits();
+                                old.put(implName, 0L); // add a zer ovalue so that nor FIO nor IDeSyDe complains. 
+                                // NOTE: This is HACK!! Ideally, you would already have this information
+                                // coming from the system graph. Luckily, this hack part of the code only
+                                // gets activated if the information is missing, so no actual information
+                                // is ever lost... only mock ones created.
+                                ins.maxSizeInBits(old);
+                            }
+                        }
+                    });
+                }
                 modelHandler.writeModel(graph, "out/" + ((NamedSystemGraph) graph).name + ".fiodl");
                 modelHandler.writeModel(graph, "out/" + ((NamedSystemGraph) graph).name + ".kgt");
 
                 // ------------------------------Running IDeSyDe-------------------------------------------------------
                 String runPath = ((NamedSystemGraph) graph).name;
 
-                Process process = new ProcessBuilder("./idesyde","-v","DEBUG","--x-total-time-out","60","--run-path","DSE-Results/" +runPath, "out/" + ((NamedSystemGraph) graph).name + ".fiodl", "bus_small_with_hwacc.fiodl").start();
+                Process process;
+                if (System.getProperty("os.name").startsWith("Windows")) {
+                    process = new ProcessBuilder(".\\idesyde.exe","-v","DEBUG","--x-total-time-out","60","--run-path","DSE-Results/" +runPath, "out/" + ((NamedSystemGraph) graph).name + ".fiodl", "bus_small_with_hwacc.fiodl").start();
+                } else {
+                    process = new ProcessBuilder("./idesyde","-v","DEBUG","--x-total-time-out","60","--run-path","DSE-Results/" +runPath, "out/" + ((NamedSystemGraph) graph).name + ".fiodl", "bus_small_with_hwacc.fiodl").start();
+                }
                 //--x-total-time-out
                 //--x-improvement-time-out
                 InputStream is = process.getInputStream();
@@ -134,7 +172,7 @@ public class PatternMatcher {
 //        }
         //------------------------------------END---------------------------------------------------------------------
 
-        modelHandler.writeModel(SystemGraph, "visual.kgt");
+        modelHandler.writeModel(systemGraph, "visual.kgt");
     }
 
 

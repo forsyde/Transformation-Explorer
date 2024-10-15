@@ -48,27 +48,16 @@ public class MapsyReducevTransformer implements Transformer{
 
             // SY vertices recognition
             if (ForSyDeHierarchy.SYMap.tryView(systemGraph, v).isPresent()) {
-                syMaps.add(ForSyDeHierarchy.SYMap.tryView(systemGraph, v).get());
+                SYMap syMap = ForSyDeHierarchy.SYMap.tryView(systemGraph, v).get();
+                syMaps.add(syMap);
 
-                int inPortNum = 0;
-                for (EdgeInfo e : systemGraph.incomingEdgesOf(v)) {
-                    if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.SYNetworkEdge)) {
-                        inPortNum += 1;
-                    }
-                }
-                int outPortNum = 0;
-                for (EdgeInfo e : systemGraph.outgoingEdgesOf(v)) {
-                    if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.SYNetworkEdge)) {
-                        outPortNum += 1;
-                    }
-                }
+                int inPortNum = syMap.inputPorts().size();
+                int outPortNum = syMap.outputPorts().size();
 
                 //System.out.println(v.getIdentifier() + ", inputs is " + inPortNum + ", and output is " + outPortNum);
 
                 // mapSY recognition
                 if (inPortNum == 1 && outPortNum == 1) {
-                    SYMap syMap = ForSyDeHierarchy.SYMap.tryView(systemGraph, v).get();
-
                     final Set<FunctionLikeEntity> combFunctions = syMap.combFunctions();
 
                     // MapSY-ReduceV pattern recognition
