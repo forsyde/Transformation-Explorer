@@ -62,6 +62,21 @@ public class PatternMatcher {
             SystemGraph graph = transformedGraphsSearchTree.poll();
             int transformedGraphsSearchTreeSize = transformedGraphsSearchTree.size();
             if (graph instanceof NamedSystemGraph) {
+                for (Vertex v : systemGraph.vertexSet()) {
+                    ForSyDeHierarchy.InstrumentedSoftwareBehaviour.tryView(systemGraph, v).ifPresent(ins -> {
+                        for (var implName: ins.computationalRequirements().keySet()) {
+                            if (!ins.maxSizeInBits().containsKey(implName)) {
+                                var old = ins.maxSizeInBits();
+                                old.put(implName, 0L); // add a zer ovalue so that nor FIO nor IDeSyDe complains. 
+                                // NOTE: This is HACK!! Ideally, you would already have this information
+                                // coming from the system graph. Luckily, this hack part of the code only
+                                // gets activated if the information is missing, so no actual information
+                                // is ever lost... only mock ones created.
+                                ins.maxSizeInBits(old);
+                            }
+                        }
+                    });
+                }
                 modelHandler.writeModel(graph, "out/" + ((NamedSystemGraph) graph).name + ".fiodl");
                 modelHandler.writeModel(graph, "out/" + ((NamedSystemGraph) graph).name + ".kgt");
 
