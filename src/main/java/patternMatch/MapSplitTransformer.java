@@ -11,6 +11,8 @@ import forsyde.io.lib.hierarchy.behavior.moc.sy.SYSignalViewer;
 import forsyde.io.lib.hierarchy.behavior.parallel.MapV;
 import forsyde.io.lib.hierarchy.behavior.parallel.ReduceV;
 import forsyde.io.lib.hierarchy.behavior.parallel.Vectorizable;
+import forsyde.io.lib.hierarchy.behavior.parallel.VectorizableViewer;
+import forsyde.io.lib.hierarchy.implementation.functional.InstrumentedBehaviour;
 import forsyde.io.lib.hierarchy.visualization.GreyBox;
 import forsyde.io.lib.hierarchy.visualization.GreyBoxViewer;
 import org.jgrapht.Graph;
@@ -26,8 +28,19 @@ import java.util.stream.Stream;
 
 
 public class MapSplitTransformer implements Transformer {
+
+    private final Map<String, Double> operationCycles;
+    public MapSplitTransformer(Map<String, Double> operationCycles) {
+        this.operationCycles = operationCycles;
+    }
     @Override
     public Set<SystemGraph> applyTransform(SystemGraph systemGraph) {
+
+        int maxNumCore = 8;
+        int minBandwidth = 4; // minimum bandwidth in bytes
+        int max_num_hop_bus = 1; // the worst-case number of hops (for NoC) or bus transfers (for a multi-bus system)
+        int hop_bus_Transfer = 8; // represents the per-hop (NoC) or per-bus transfer (multi-bus) delay
+
         Set<SystemGraph> mapSplitTransformedGraphs= new HashSet<>();
 
         // Synchronous processes recognition
@@ -131,11 +144,327 @@ public class MapSplitTransformer implements Transformer {
                 }
             }
             if (!processesAndOrderedExecutables.get(syMap).isEmpty() && processesAndOrderedExecutables.get(syMap).size() > 1) {
-                System.out.println("---------------------Map-Split----------------------------");
-                System.out.println(syMap.getIdentifier() + ": ");
-                for (FunctionLikeEntity executable : processesAndOrderedExecutables.get(syMap)) {
-                    System.out.print(executable.getIdentifier() + "\t");
+                if (!processesAndOrderedExecutables.get(syMap).isEmpty() &&
+                        processesAndOrderedExecutables.get(syMap).size() > 1) {
+
+                    System.out.println("\n==================================================");
+                    System.out.println("        Map-Split Pattern Detected");
+                    System.out.println("==================================================");
+                    System.out.printf("%-25s : %s%n", "SYMap Vertex", syMap.getIdentifier());
+
+                    List<FunctionLikeEntity> executables = processesAndOrderedExecutables.get(syMap);
+                    String functionLabel = executables.size() == 1 ? "Combinational Function" : "Combinational Functions";
+                    //System.out.printf("%-25s : %d %s%n", functionLabel, executables.size(), executables.size() == 1 ? "" : "found");
+
+                    System.out.println("Ordered " + functionLabel + ":");
+
+                    int index = 1;
+                    for (FunctionLikeEntity executable : executables) {
+                        System.out.printf("  [%d] %s%n", index++, executable.getIdentifier());
+                    }
+
+                    System.out.println("--------------------------------------------------\n");
+
                 }
+
+                List<FunctionLikeEntity> executables = processesAndOrderedExecutables.get(syMap);
+                //Finding the dimensions of the input (which determines the number of mapSYs and is used for cost calculation)
+                Vertex srcSignal = null;
+                Vertex dstSignal = null;
+                List<Integer> srcSigChildDimentions = new ArrayList<>();
+                List<Integer> dstSigChildDimentions = new ArrayList<>();
+                Scanner scanner = new Scanner(System.in);
+                List<Integer> groupSize = new ArrayList<>();
+                for (EdgeInfo e : systemGraph.incomingEdgesOf(syMap)) {
+                    if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.SYNetworkEdge)) {
+                        srcSignal = systemGraph.queryVertex(e.getSource()).get();
+                        for (EdgeInfo ed : systemGraph.outgoingEdgesOf(srcSignal)) {
+                            if (ed.hasTrait(ForSyDeHierarchy.EdgeTraits.VisualContainment)){
+                                final Vertex sigChild = systemGraph.queryVertex(ed.getTarget()).get();
+                                if (ForSyDeHierarchy.Vectorizable.tryView(systemGraph, sigChild).isPresent()){
+                                    srcSigChildDimentions = ForSyDeHierarchy.Vectorizable.tryView(systemGraph, sigChild).get().dimensions();
+                                    //The first dimension which is the number of rows in the case of a matrix is the number of mapSYs.
+//                                                    System.out.println("Please enter the intended size of each process (the dimension of the input signal is "+ srcSigChildDimentions.get(0) + "):");
+//                                                    groupSize = scanner.nextInt();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                int dataSize = 1;
+                for (int dim : srcSigChildDimentions) {
+                    dataSize *= dim;
+                }
+
+
+                long C_lhs = 0;
+                long bestCost = Long.MAX_VALUE;
+
+                // ++++++++++++++++++++++++++++ Original vertex v cost calculation ++++++++++++++++++++++++++++++++++++
+                Set<FunctionLikeEntity> combFuncs = new HashSet<>(syMap.combFunctions());
+                Set<InstrumentedBehaviour> basicFuncs = new HashSet<>();
+                Queue<FunctionLikeEntity> queue = new LinkedList<>(combFuncs);
+
+                while (!queue.isEmpty()) {
+                    FunctionLikeEntity kers = queue.poll();
+
+                    if (ForSyDeHierarchy.HasANSICImplementations.tryView(kers).isPresent() |
+                            ForSyDeHierarchy.InterleaveV.tryView(kers).isPresent()) {
+                        basicFuncs.add(ForSyDeHierarchy.InstrumentedBehaviour.enforce(kers));
+                    } else {
+                        if (ForSyDeHierarchy.MapV.tryView(kers).isPresent()) {
+                            for (FunctionLikeEntity k : ForSyDeHierarchy.MapV.tryView(kers).get().kernels()) {
+                                if (combFuncs.add(k)) queue.add(k);
+                            }
+                        } else if (ForSyDeHierarchy.ReduceV.tryView(kers).isPresent()) {
+                            for (FunctionLikeEntity k : ForSyDeHierarchy.ReduceV.tryView(kers).get().kernels()) {
+                                if (combFuncs.add(k)) queue.add(k);
+                            }
+                        }
+                    }
+                }
+
+
+                // New map: function ID → cost per element
+                Map<String, Long> costPerElementPerFunction = new HashMap<>();
+
+                Map<String, Long> computationCostsPerElement = new HashMap<>();
+                Map<String, Long> computationCostsTotal = new HashMap<>();
+
+                for (InstrumentedBehaviour func : basicFuncs) {
+                    Map<String, Map<String, Long>> requirements = func.computationalRequirements();
+
+                    for (Map.Entry<String, Map<String, Long>> implEntry : requirements.entrySet()) {
+                        String implementation = implEntry.getKey();
+                        Map<String, Long> operations = implEntry.getValue();
+
+                        long costPerElement = 0;
+
+                        for (Map.Entry<String, Long> opEntry : operations.entrySet()) {
+                            String op = opEntry.getKey();
+                            long count = opEntry.getValue();
+
+                            Double cyclesPerOp = operationCycles.get(op);
+                            if (cyclesPerOp != null) {
+                                costPerElement += (long) (count * cyclesPerOp);
+                            } else {
+                                System.out.println("Warning: No cycle info for operation: " + op);
+                            }
+                        }
+
+                        // Store per-function cost for this implementation
+                        costPerElementPerFunction.put(func.getIdentifier(), costPerElement);
+
+                        // Aggregate normally for global summaries
+                        computationCostsPerElement.merge(implementation, costPerElement, Long::sum);
+                        computationCostsTotal.merge(implementation, costPerElement * dataSize, Long::sum);
+                    }
+                }
+
+                // === Print cost per basic function ===
+                System.out.println("\n--------------------------------------------------");
+                System.out.println("   Cost Per Element for Basic Functions");
+                System.out.println("--------------------------------------------------");
+                System.out.printf("%-30s | %-15s%n", "Function", "Cost Per Element");
+                System.out.println("--------------------------------------------------");
+
+                for (Map.Entry<String, Long> entry : costPerElementPerFunction.entrySet()) {
+                    String funcId = entry.getKey();
+                    Long cost = entry.getValue();
+                    System.out.printf("%-30s | %-15d%n", funcId, cost);
+                }
+
+                System.out.println("--------------------------------------------------");
+
+
+
+
+                // === Print original cost table (C_lhs) ===
+                System.out.println("\n--------------------------------------------------");
+                System.out.println("    C_lhs Per Implementation (Orignal)");
+                System.out.println("--------------------------------------------------");
+                System.out.printf("%-25s | %-15s%n", "Implementation", "Total Cost");
+                System.out.println("--------------------------------------------------");
+
+
+                for (String impl : computationCostsTotal.keySet()) {
+                    long total = computationCostsTotal.getOrDefault(impl, 0L);
+                    System.out.printf("%-25s | %-15d%n", impl, total);
+                    C_lhs = Math.max(C_lhs, total);
+                }
+
+                System.out.println("--------------------------------------------------");
+                System.out.printf("%-25s   %-15d%n", "Worst Cost (Max C_lhs)", C_lhs);
+                System.out.println("--------------------------------------------------");
+
+                // ++++++++++++++++++++++++++++ Transformed vertex v cost calculation +++++++++++++++++++++++++++++++++
+
+                //the partitioning parameter
+                List<Integer> P = new ArrayList<>();
+
+
+                System.out.println("\nComputation Costs for Transformed Graph by Partitioning Parameter:");
+
+                Map<String, Long> costTotalPerExecutable = new LinkedHashMap<>();
+                Map<String, Long> costPerElementPerExecutable = new LinkedHashMap<>();
+
+                for (int i = 0; i < executables.size(); i++) {
+                    FunctionLikeEntity executable = executables.get(i);
+                    String id = executable.getIdentifier();
+
+                    // Compute cost per element
+                    long costPerElement = computeCostPerElementForExecutable(executable, operationCycles);
+                    costPerElementPerExecutable.put(id, costPerElement);
+
+                    // Determine data size
+                    int currentDataSize = 1;
+                    if (i == 0) {
+                        // First executable: use original syMap data size
+                        currentDataSize = dataSize;
+                    } else {
+                        // Otherwise, traverse ParallelComputationEdge to get source dimensions
+                        for (EdgeInfo e : systemGraph.incomingEdgesOf(executable)) {
+                            if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.ParallelComputationEdge)) {
+                                Vertex src = systemGraph.getEdgeSource(e);
+                                List<Integer> dims = ForSyDeHierarchy.Vectorizable.tryView(systemGraph, src).get().dimensions();
+                                currentDataSize = dims.stream().reduce(1, (a, b) -> a * b);
+                            }
+                        }
+                    }
+
+                    long totalCost = costPerElement * currentDataSize;
+                    costTotalPerExecutable.put(id, totalCost);
+                }
+
+
+                System.out.println("\n--------------------------------------------------");
+                System.out.println("    Cost Per Element for Each Executable");
+                System.out.println("--------------------------------------------------");
+                System.out.printf("%-25s | %-15s%n", "Executable", "Cost/Element");
+                System.out.println("--------------------------------------------------");
+
+                for (Map.Entry<String, Long> entry : costPerElementPerExecutable.entrySet()) {
+                    System.out.printf("%-25s | %-15d%n", entry.getKey(), entry.getValue());
+                }
+
+                System.out.println("--------------------------------------------------");
+
+                System.out.println("\n--------------------------------------------------");
+                System.out.println("   Total Computation Cost per Executable");
+                System.out.println("--------------------------------------------------");
+                System.out.printf("%-25s | %-15s%n", "Executable", "Total Cost");
+                System.out.println("--------------------------------------------------");
+
+                for (Map.Entry<String, Long> entry : costTotalPerExecutable.entrySet()) {
+                    System.out.printf("%-25s | %-15d%n", entry.getKey(), entry.getValue());
+                }
+
+                System.out.println("--------------------------------------------------");
+
+
+
+                List<List<String>> bestPartition = null;
+                int bytesPerElement = 4; // Assuming 4 bytes per element
+
+                if (executables.size() == 2) {
+                    List<List<String>> onlyPartition = List.of(
+                            List.of(executables.get(0).getIdentifier()),
+                            List.of(executables.get(1).getIdentifier())
+                    );
+
+                    List<Long> compStageCosts = new ArrayList<>();
+                    for (List<String> group : onlyPartition) {
+                        long stageCost = 0;
+                        for (String fID : group) {
+                            stageCost += costTotalPerExecutable.getOrDefault(fID, 0L);
+                        }
+                        compStageCosts.add(stageCost);
+                    }
+
+                    long compCost = Collections.max(compStageCosts);
+                    long commCost = 0;
+
+                    // Estimate communication cost between stage 0 and stage 1
+                    String srcFuncID = onlyPartition.get(0).get(onlyPartition.get(0).size() - 1);
+                    String dstFuncID = onlyPartition.get(1).get(0);
+                    int commDataSize = estimateDataSizeBetween(srcFuncID, dstFuncID, systemGraph);
+                    commCost = (long) ((double) (commDataSize * bytesPerElement) / minBandwidth + max_num_hop_bus * hop_bus_Transfer);
+
+                    long rhsCost = Math.max(compCost, commCost);
+
+                    System.out.println("Only Partitioning: " + onlyPartition);
+                    System.out.println("  Computation Cost (Max stage): " + compCost);
+                    //System.out.println("  Computation Cost (commDataSize): " + commDataSize);
+                    System.out.println("  Communication Cost (stage 0->1): " + commCost);
+                    System.out.println("  C_rhs = " + rhsCost);
+
+                    bestCost = rhsCost;
+                    bestPartition = onlyPartition;
+
+                } else {
+                    int n = executables.size();
+
+                    for (int numGroups = 2; numGroups <= n; numGroups++) {
+                        List<List<Integer>> partitions = generateOrderedPartitions(n, numGroups);
+
+                        for (List<Integer> splitPoints : partitions) {
+                            List<List<String>> groups = new ArrayList<>();
+                            int start = 0;
+                            for (int end : splitPoints) {
+                                List<String> group = executables.subList(start, end).stream()
+                                        .map(FunctionLikeEntity::getIdentifier)
+                                        .collect(Collectors.toList());
+                                groups.add(group);
+                                start = end;
+                            }
+
+                            long compMax = 0;
+                            List<Long> compStageCosts = new ArrayList<>();
+                            for (List<String> group : groups) {
+                                long stageCost = 0;
+                                for (String fID : group) {
+                                    stageCost += costTotalPerExecutable.getOrDefault(fID, 0L);
+                                }
+                                compStageCosts.add(stageCost);
+                                compMax = Math.max(compMax, stageCost);
+                            }
+
+                            long commMax = 0;
+                            List<Long> commStageCosts = new ArrayList<>();
+                            for (int i = 0; i < groups.size() - 1; i++) {
+                                String srcFuncID = groups.get(i).get(groups.get(i).size() - 1);
+                                String dstFuncID = groups.get(i + 1).get(0);
+                                int commDataSize = estimateDataSizeBetween(srcFuncID, dstFuncID, systemGraph);
+                                long stageCommCost = (long) ((double) (commDataSize * bytesPerElement) / minBandwidth + max_num_hop_bus * hop_bus_Transfer);
+                                commStageCosts.add(stageCommCost);
+                                commMax = Math.max(commMax, stageCommCost);
+                            }
+
+                            long rhsCost = Math.max(compMax, commMax);
+
+                            // Print intermediate evaluation
+                            System.out.println("\nCandidate Partitioning: " + groups);
+                            System.out.println("  Computation Stage Costs: " + compStageCosts);
+                            System.out.println("  Communication Stage Costs: " + commStageCosts);
+                            System.out.println("  C_rhs (max of both): " + rhsCost);
+
+                            if (rhsCost < bestCost) {
+                                bestCost = rhsCost;
+                                bestPartition = groups;
+                            }
+                        }
+                    }
+
+                    System.out.println("\nBest Partitioning: " + bestPartition);
+                    System.out.println("Final C_rhs = " + bestCost);
+
+                    P = bestPartition.stream().map(List::size).collect(Collectors.toList());
+                }
+
+
+                // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
                 //Applying the transformation on only one of the vertices of a parallel structure
                 Vertex parStructParent = null;
@@ -162,7 +491,9 @@ public class MapSplitTransformer implements Transformer {
 
                 System.out.println();
                 // Map-Split transformation application
-                if (apply.getPlain() == 1) {
+                if (apply.getPlain() == 1 && bestCost < C_lhs) {
+                    System.out.println("Applying Map-Split transformation for partitioning parameter = " + bestPartition + " (C_rhs = " + bestCost + " < C_lhs = " + C_lhs + ")");
+
                     Random random = new Random();
                     int rand = random.nextInt(1000);
                     final SystemGraph transformedGraph = new NamedSystemGraph(syMap.getIdentifier() + rand + "_T");
@@ -187,7 +518,6 @@ public class MapSplitTransformer implements Transformer {
                         final SYMapViewer rightSYMap = newSYMaps.get(i + 1);
                         final SYSignalViewer newSYSignal = ForSyDeHierarchy.SYSignal.enforce(transformedGraph, transformedGraph.newVertex(leftSYMap.getIdentifier() + rightSYMap.getIdentifier() + "Sig"));
                         root.addContained(ForSyDeHierarchy.Visualizable.enforce(newSYSignal));
-                        //working on this part
                         //for (int j = 0; j < processesAndOrderedExecutables.get(syMap).size() - 1; j++) {
                         final FunctionLikeEntity exe1 = processesAndOrderedExecutables.get(syMap).get(i);
                         final FunctionLikeEntity exe2 = processesAndOrderedExecutables.get(syMap).get(i + 1);
@@ -383,10 +713,80 @@ public class MapSplitTransformer implements Transformer {
                     //Writing the transformed graphs
 //                forSyDeModelHandler.writeModel(transformedGraph, syMap.getIdentifier() + "_transformed.fiodl");
 //                forSyDeModelHandler.writeModel(transformedGraph, syMap.getIdentifier() + "_transformed.kgt");
+                }else {
+                    if (!(apply.getPlain() == 1)) {
+                        System.out.println("Not the first process in the parallel structure.");
+                    } else if (C_lhs <= bestCost){
+                        System.out.println("Skipping MapSY-MapV transformation. No improvement (C_lhs = " + C_lhs + ", Best C_rhs = " + bestCost + ")");
+                    }
                 }
 
             }
         }
         return mapSplitTransformedGraphs;
+    }
+
+    private int estimateDataSizeBetween(String srcID, String dstID, SystemGraph graph) {
+        Optional<Vertex> srcOpt = graph.queryVertex(srcID);
+        Optional<Vertex> dstOpt = graph.queryVertex(dstID);
+        if (srcOpt.isEmpty() || dstOpt.isEmpty()) return 1;
+
+        for (EdgeInfo e : graph.outgoingEdgesOf(srcOpt.get())) {
+            if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.ParallelComputationEdge)) {
+                Vertex signal = graph.getEdgeTarget(e);
+                Optional<VectorizableViewer> vecView = ForSyDeHierarchy.Vectorizable.tryView(graph, signal);
+                if (vecView.isPresent()) {
+                    List<Integer> dims = vecView.get().dimensions();
+                    return dims.stream().reduce(1, (a, b) -> a * b);
+                }
+
+            }
+        }
+        return 1; // default if not found
+    }
+
+    public long computeCostPerElementForExecutable(FunctionLikeEntity executable, Map<String, Double> operationCycles) {
+        Set<InstrumentedBehaviour> basicFuncs = new HashSet<>();
+        Queue<FunctionLikeEntity> queue = new LinkedList<>();
+        queue.add(executable);
+
+        while (!queue.isEmpty()) {
+            FunctionLikeEntity current = queue.poll();
+
+            if (ForSyDeHierarchy.HasANSICImplementations.tryView(current).isPresent() ||
+                    ForSyDeHierarchy.InterleaveV.tryView(current).isPresent()) {
+                basicFuncs.add(ForSyDeHierarchy.InstrumentedBehaviour.enforce(current));
+            } else {
+                if (ForSyDeHierarchy.MapV.tryView(current).isPresent()) {
+                    for (FunctionLikeEntity k : ForSyDeHierarchy.MapV.tryView(current).get().kernels()) {
+                        queue.add(k);
+                    }
+                } else if (ForSyDeHierarchy.ReduceV.tryView(current).isPresent()) {
+                    for (FunctionLikeEntity k : ForSyDeHierarchy.ReduceV.tryView(current).get().kernels()) {
+                        queue.add(k);
+                    }
+                }
+            }
+        }
+
+        long costPerElement = 0;
+
+        for (InstrumentedBehaviour func : basicFuncs) {
+            Map<String, Map<String, Long>> requirements = func.computationalRequirements();
+            for (Map<String, Long> operations : requirements.values()) {
+                for (Map.Entry<String, Long> opEntry : operations.entrySet()) {
+                    String op = opEntry.getKey();
+                    long count = opEntry.getValue();
+                    Double cyclesPerOp = operationCycles.get(op);
+                    if (cyclesPerOp != null) {
+                        costPerElement += (long) (count * cyclesPerOp);
+                    } else {
+                        System.out.println("Warning: No cycle info for operation: " + op);
+                    }
+                }
+            }
+        }
+
+        return costPerElement;
     }
 }

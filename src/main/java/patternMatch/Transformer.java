@@ -141,4 +141,29 @@ public interface Transformer {
         });
         return childrenSorted;
     }
+
+    // Given n elements and k groups, generate all ordered k-partitions
+    default List<List<Integer>> generateOrderedPartitions(int n, int k) {
+        List<List<Integer>> result = new ArrayList<>();
+        generatePartitionHelper(n, k, 1, new ArrayList<>(), result);
+        return result;
+    }
+
+    private void generatePartitionHelper(int n, int k, int min, List<Integer> current, List<List<Integer>> result) {
+        if (k == 1) {
+            if (min < n) {
+                current.add(n);
+                result.add(new ArrayList<>(current));
+                current.remove(current.size() - 1);
+            }
+            return;
+        }
+        for (int i = min; i <= n - (k - 1); i++) {
+            current.add(i);
+            generatePartitionHelper(n, k - 1, i + 1, current, result);
+            current.remove(current.size() - 1);
+        }
+    }
+
+
 }

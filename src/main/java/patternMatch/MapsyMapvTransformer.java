@@ -14,6 +14,7 @@ import forsyde.io.lib.hierarchy.behavior.parallel.MapV;
 import forsyde.io.lib.hierarchy.behavior.parallel.ReduceV;
 import forsyde.io.lib.hierarchy.behavior.parallel.Vectorizable;
 import forsyde.io.lib.hierarchy.behavior.parallel.VectorizableViewer;
+import forsyde.io.lib.hierarchy.implementation.functional.InstrumentedBehaviour;
 import forsyde.io.lib.hierarchy.visualization.*;
 
 import java.util.*;
@@ -21,8 +22,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MapsyMapvTransformer implements Transformer {
+
+    private final Map<String, Double> operationCycles;
+    public MapsyMapvTransformer(Map<String, Double> operationCycles) {
+        this.operationCycles = operationCycles;
+    }
+
     @Override
     public Set<SystemGraph> applyTransform(SystemGraph systemGraph) {
+        int maxNumCore = 8;
+        int minBandwidth = 4; // minimum bandwidth in bytes
+        int max_num_hop_bus = 1; // the worst-case number of hops (for NoC) or bus transfers (for a multi-bus system)
+        int hop_bus_Transfer = 8; // represents the per-hop (NoC) or per-bus transfer (multi-bus) delay
+
         Set<SystemGraph> mapsyMapvTransformedGraphs = new HashSet<>();
         // Synchronous processes recognition
         List<SYMapViewer> syMaps = new ArrayList<>();
@@ -66,8 +78,12 @@ public class MapsyMapvTransformer implements Transformer {
                         for (FunctionLikeEntity combs : combFunctions) {
                             ForSyDeHierarchy.MapV.tryView(combs).ifPresent(mapV -> {
                                 MapV mapInside = mapV;
-                                System.out.println("---------------------MapSY-MapV------------------------");
-                                System.out.println(syMap.getIdentifier() + ": \n" + mapV.getIdentifier());
+                                System.out.println("\n==================================================");
+                                System.out.println("        MapSY-MapV Pattern Detected");
+                                System.out.println("==================================================");
+                                System.out.printf("%-25s : %s%n", "SYMap Vertex", syMap.getIdentifier());
+                                System.out.printf("%-25s : %s%n", "Matched MapV Function", mapV.getIdentifier());
+
                                 GreyBoxViewer root = null;
                                 for (EdgeInfo e : systemGraph.incomingEdgesOf(v)) {
                                     if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.VisualContainment)) {
@@ -98,7 +114,183 @@ public class MapsyMapvTransformer implements Transformer {
                                 }
                                 //----------------------------------------------------------------------------
                                 System.out.println();
-                                if (apply.getPlain() == 1) {
+                                Vertex srcSignal = null;
+                                List<Integer> sigChildDimentions = new ArrayList<>();
+                                for (EdgeInfo e : systemGraph.incomingEdgesOf(v)) {
+                                    if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.SYNetworkEdge)) {
+                                        srcSignal = systemGraph.queryVertex(e.getSource()).orElse(null);
+                                        if (srcSignal != null) {
+                                            for (EdgeInfo ed : systemGraph.outgoingEdgesOf(srcSignal)) {
+                                                if (ed.hasTrait(ForSyDeHierarchy.EdgeTraits.VisualContainment)) {
+                                                    Vertex sigChild = systemGraph.queryVertex(ed.getTarget()).orElse(null);
+                                                    if (sigChild != null && ForSyDeHierarchy.Vectorizable.tryView(systemGraph, sigChild).isPresent()) {
+                                                        sigChildDimentions = ForSyDeHierarchy.Vectorizable.tryView(systemGraph, sigChild).get().dimensions();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                int dataSize = 1;
+                                for (int dim : sigChildDimentions) {
+                                    dataSize *= dim;
+                                }
+
+                                // check if dimensions were found
+                                if (sigChildDimentions.isEmpty()) {
+                                    System.out.println("Warning: No vectorizable dimensions found. Skipping transformation.");
+                                    return;
+                                }
+
+                                // ++++++++++++++++++++++++++++ Original vertex v cost calculation ++++++++++++++++++++++++++++++++++++
+                                long C_lhs = 0;
+                                long C_rhs = 0;
+                                Map<Integer, Map<String, Long>> detailedStageCosts = new HashMap<>();
+
+                                Set<FunctionLikeEntity> kernels = new HashSet<>(mapInside.kernels());
+                                Set<InstrumentedBehaviour> basicFuncs = new HashSet<>();
+                                Queue<FunctionLikeEntity> queue = new LinkedList<>(kernels);
+
+                                while (!queue.isEmpty()) {
+                                    FunctionLikeEntity kers = queue.poll();
+
+                                    if (ForSyDeHierarchy.HasANSICImplementations.tryView(kers).isPresent() |
+                                            ForSyDeHierarchy.InterleaveV.tryView(kers).isPresent()) {
+                                        basicFuncs.add(ForSyDeHierarchy.InstrumentedBehaviour.enforce(kers));
+                                    } else {
+                                        if (ForSyDeHierarchy.MapV.tryView(kers).isPresent()) {
+                                            for (FunctionLikeEntity k : ForSyDeHierarchy.MapV.tryView(kers).get().kernels()) {
+                                                if (kernels.add(k)) queue.add(k);
+                                            }
+                                        } else if (ForSyDeHierarchy.ReduceV.tryView(kers).isPresent()) {
+                                            for (FunctionLikeEntity k : ForSyDeHierarchy.ReduceV.tryView(kers).get().kernels()) {
+                                                if (kernels.add(k)) queue.add(k);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                Map<String, Long> computationCostsPerElement = new HashMap<>();
+                                Map<String, Long> computationCostsTotal = new HashMap<>();
+
+                                for (InstrumentedBehaviour func : basicFuncs) {
+                                    Map<String, Map<String, Long>> requirements = func.computationalRequirements();
+
+                                    for (Map.Entry<String, Map<String, Long>> implEntry : requirements.entrySet()) {
+                                        String implementation = implEntry.getKey();
+                                        Map<String, Long> operations = implEntry.getValue();
+
+                                        long costPerElement = 0;
+
+                                        for (Map.Entry<String, Long> opEntry : operations.entrySet()) {
+                                            String op = opEntry.getKey();
+                                            long count = opEntry.getValue();
+
+                                            Double cyclesPerOp = operationCycles.get(op);
+                                            if (cyclesPerOp != null) {
+                                                costPerElement += (long) (count * cyclesPerOp);
+                                            } else {
+                                                System.out.println("Warning: No cycle info for operation: " + op);
+                                            }
+                                        }
+
+                                        computationCostsPerElement.merge(implementation, costPerElement, Long::sum);
+                                        computationCostsTotal.merge(implementation, costPerElement * dataSize, Long::sum);
+                                    }
+                                }
+
+                                // === Print original cost table (C_lhs) ===
+                                System.out.println("\n--------------------------------------------------");
+                                System.out.println("    C_lhs Per Implementation (Orignal)");
+                                System.out.println("--------------------------------------------------");
+                                System.out.printf("%-25s | %-15s%n", "Implementation", "Total Cost");
+                                System.out.println("--------------------------------------------------");
+
+
+                                for (String impl : computationCostsTotal.keySet()) {
+                                    long total = computationCostsTotal.getOrDefault(impl, 0L);
+                                    System.out.printf("%-25s | %-15d%n", impl, total);
+                                    C_lhs = Math.max(C_lhs, total);
+                                }
+
+                                System.out.println("--------------------------------------------------");
+                                System.out.printf("%-25s   %-15d%n", "Worst Cost (Max C_lhs)", C_lhs);
+                                System.out.println("--------------------------------------------------");
+
+                                // ++++++++++++++++++++++++++++ Transformed vertex v cost calculation +++++++++++++++++++++++++++++++++
+
+                                System.out.println("\nComputation Costs for Transformed Graph:");
+
+                                // ++++++++++++++++++++++++++++ Transformed vertex v cost calculation (Non-Parameterized) +++++++++++++++++++++++++++++++++
+
+                                int currentGroupSize = sigChildDimentions.get(0);  // 1 element per group → max parallelism
+
+                                System.out.println("\nComputation Cost for Transformed Graph with Full Parallelism (Group Size = " + currentGroupSize + ")");
+
+                                long C_part_dist = 0;
+                                long C_parallel = 0;
+                                long C_coll_recomb = 0;
+                                long C_distribute = 0;
+                                long C_collect = 0;
+
+                                Double loadCycles = operationCycles.get("load");
+                                Double storeCycles = operationCycles.get("store");
+
+                                if (loadCycles == null) {
+                                    System.out.println("Warning: No cycle info for 'load' operation. Using default 1.0");
+                                    loadCycles = 1.0;
+                                }
+                                if (storeCycles == null) {
+                                    System.out.println("Warning: No cycle info for 'store' operation. Using default 1.0");
+                                    storeCycles = 1.0;
+                                }
+
+                                C_part_dist = (long) (dataSize * 2 * (loadCycles + storeCycles));
+
+                                // C_parallel: max cost among implementations
+                                for (Map.Entry<String, Long> entry : computationCostsTotal.entrySet()) {
+                                    long totalCost = entry.getValue();
+                                    long c_parallel = currentGroupSize > 0 ? totalCost / currentGroupSize : totalCost;
+                                    C_parallel = Math.max(C_parallel, c_parallel);
+                                }
+
+                                C_coll_recomb = C_part_dist;
+
+                                if (currentGroupSize > 0 && minBandwidth > 0) {
+                                    int bytesPerElement = 4;
+                                    int dataPerGroup = dataSize / currentGroupSize;
+                                    double communicationTimePerGroup = ((double) (dataPerGroup * bytesPerElement)) / minBandwidth;
+                                    double latencyPerGroup = max_num_hop_bus * hop_bus_Transfer;
+                                    C_distribute = (long) (currentGroupSize * (communicationTimePerGroup + latencyPerGroup));
+                                }
+                                C_collect = C_distribute;
+
+                                List<Long> stageCosts = Arrays.asList(C_part_dist, C_parallel, C_coll_recomb, C_distribute, C_collect);
+                                C_rhs = Collections.max(stageCosts);
+
+                                // === Print results ===
+                                System.out.println("\n--------------------------------------------------");
+                                System.out.println("C_rhs for Maximum Parallelism (Non-Parameterized)");
+                                System.out.println("--------------------------------------------------");
+                                System.out.printf("%-30s | %-20d%n", "Number of Parallel Branches", currentGroupSize);
+                                System.out.printf("%-30s | %-20d%n", "C_rhs (cycles)", C_rhs);
+                                System.out.println("--------------------------------------------------");
+
+                                System.out.println("\nDetailed Cost Breakdown:");
+                                System.out.println("--------------------------------------------------------------");
+                                System.out.printf("%-20s | %-10d%n", "C_part_dist", C_part_dist);
+                                System.out.printf("%-20s | %-10d%n", "C_parallel", C_parallel);
+                                System.out.printf("%-20s | %-10d%n", "C_coll_recomb", C_coll_recomb);
+                                System.out.printf("%-20s | %-10d%n", "C_distribute", C_distribute);
+                                System.out.printf("%-20s | %-10d%n", "C_collect", C_collect);
+                                System.out.println("--------------------------------------------------------------");
+
+
+                                //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                if (C_lhs > C_rhs && apply.getPlain() == 1 && !(maxNumCore < sigChildDimentions.get(0))){
+                                    System.out.println("Applying MapSY-MapV transformation (C_rhs = " + C_rhs + " < C_lhs = " + C_lhs + ")");
+
                                     // MapSY-MapV transformation application
                                     Random random = new Random();
                                     int rand = random.nextInt(1000);
@@ -108,24 +300,7 @@ public class MapsyMapvTransformer implements Transformer {
                                     // this need to be done since the root was viewed in the wrong system graph
                                     root = ForSyDeHierarchy.GreyBox.tryView(transformedGraph, root.getViewedVertex()).get();
                                     //Generating new SYMaps: mapSY(f1), mapSY(f2), ...
-                                    //Finding the dimensions of the input (which determines the number of mapSYs)
-                                    Vertex srcSignal = null;
-                                    Vertex dstSignal = null;
-                                    List<Integer> sigChildDimentions = new ArrayList<>();
-                                    Scanner scanner = new Scanner(System.in);
-                                    int groupSize;
-                                    for (EdgeInfo e : transformedGraph.incomingEdgesOf(v)) {
-                                        if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.SYNetworkEdge)) {
-                                            srcSignal = transformedGraph.queryVertex(e.getSource()).get();
-                                            for (EdgeInfo ed : transformedGraph.outgoingEdgesOf(srcSignal)) {
-                                                if (ed.hasTrait(ForSyDeHierarchy.EdgeTraits.VisualContainment)) {
-                                                    final Vertex sigChild = transformedGraph.queryVertex(ed.getTarget()).get();
-                                                    if (ForSyDeHierarchy.Vectorizable.tryView(transformedGraph, sigChild).isPresent()) {
-                                                        Vectorizable vectorizable = ForSyDeHierarchy.Vectorizable.tryView(transformedGraph, sigChild).get();
-                                                        sigChildDimentions = vectorizable.dimensions();
-                                                        //The first dimension which is the number of rows in the case of a matrix is the number of mapSYs.
-//                                                    System.out.println("Please enter the intended size of each process (the dimension of the input signal is "+ sigChildDimentions.get(0) + "):");
-//                                                    groupSize = scanner.nextInt();
+
                                                         final Vertex parallelStruct = transformedGraph.newVertex(v.getIdentifier() + mapInside.getIdentifier());
                                                         parallelStruct.addTraits(new OpaqueTrait("ParStruct"));
                                                         parallelStruct.addPort("tuplets");
@@ -154,11 +329,8 @@ public class MapsyMapvTransformer implements Transformer {
 
                                                         }
                                                         parallelStruct.putProperty("vectorProcesses", parList);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+
+                                    Vertex dstSignal = null;
                                     for (EdgeInfo e : transformedGraph.outgoingEdgesOf(v)) {
                                         if (e.hasTrait(ForSyDeHierarchy.EdgeTraits.SYNetworkEdge)) {
                                             dstSignal = transformedGraph.queryVertex(e.getTarget()).get();
@@ -328,6 +500,17 @@ public class MapsyMapvTransformer implements Transformer {
 
 //                                deleteHierarchy(transformedGraph, v);
                                     mapsyMapvTransformedGraphs.add(transformedGraph);
+                                } else {
+                                    if (C_lhs <= C_rhs) {
+                                        System.out.println("C_lhs < C_rhs (C_lhs=" + C_lhs + ", C_rhs=" + C_rhs + ")");
+                                    }
+                                    if (apply.getPlain() != 1) {
+                                        System.out.println("Not the first process in the parallel structure.");
+                                    }
+                                    if (maxNumCore < sigChildDimentions.get(0)) {
+                                        System.out.println("maxNumCore < sigChildDimentions[0] (maxNumCore=" + maxNumCore + ", sigChildDimentions[0]=" + sigChildDimentions.get(0) + ")");
+                                    }
+                                    System.out.println("Skipping MapSY-MapV transformation.");
                                 }
                             });
                         }
