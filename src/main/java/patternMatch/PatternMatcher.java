@@ -29,15 +29,12 @@ public class PatternMatcher {
 
         ModelHandler modelHandler = new ModelHandler().registerTraitHierarchy(new ForSyDeHierarchy()).registerDriver(new KGTDriver()).registerSystemGraphMigrator(new TraitNamesFrom0_6To0_7());
         SystemGraph SystemGraph = modelHandler.loadModel(Paths.get("imageProcessingSY-gray.fiodl"));
+        //SystemGraph SystemGraph = modelHandler.loadModel(Paths.get("cloud_detection.fiodl"));
         //SystemGraph SystemGraph = modelHandler.loadModel(Paths.get("imageProcessing_migrated.fiodl"));
         //SystemGraph SystemGraph = modelHandler.loadModel(Paths.get("imageProcessing_migrated_gray_hierarchy.fiodl"));
         transformedGraphsSearchTree.add(SystemGraph);
-        //SystemGraph SystemGraph = ModelHandler.loadModel(Paths.get("maxBrightnessSY_transformed.fiodl"));
-        //SystemGraph SystemGraph = ModelHandler.loadModel(Paths.get("maxBrightnessMapVtransformedSY_transformed.fiodl"));
-        //SystemGraph SystemGraph = ModelHandler.loadModel(Paths.get("maxBrightnessMapVtransformedSYtransformedSY0_transformed.fiodl"));
 
         //Making the transformation tree with DFS (depth-first search) algorithm
-        //Making the transformation tree with Breadth First Search algorithm
         int round = 0;
         Files.createDirectories(Paths.get("out"));
         while (!(transformedGraphsSearchTree.isEmpty())){
@@ -48,19 +45,19 @@ public class PatternMatcher {
                 modelHandler.writeModel(graph, "out/" + ((NamedSystemGraph) graph).name + ".kgt");
 
                 // ------------------------------Running IDeSyDe-------------------------------------------------------
-                String runPath = ((NamedSystemGraph) graph).name;
-
-                Process process = new ProcessBuilder("./idesyde","-v","DEBUG","--x-total-time-out","60","--run-path","DSE-Results/" +runPath, "out/" + ((NamedSystemGraph) graph).name + ".fiodl", "bus_small_with_hwacc.fiodl").start();
-                //--x-total-time-out
-                //--x-improvement-time-out
-                InputStream is = process.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
-                String line;
-                while ((line = br.readLine()) != null) {
-                    System.out.println(line);
-                }
-                process.waitFor();
+//                String runPath = ((NamedSystemGraph) graph).name;
+//
+//                Process process = new ProcessBuilder("./idesyde","-v","DEBUG","--x-total-time-out","60","--run-path","DSE-Results/" +runPath, "out/" + ((NamedSystemGraph) graph).name + ".fiodl", "bus_small_with_hwacc.fiodl").start();
+//                //--x-total-time-out
+//                //--x-improvement-time-out
+//                InputStream is = process.getInputStream();
+//                InputStreamReader isr = new InputStreamReader(is);
+//                BufferedReader br = new BufferedReader(isr);
+//                String line;
+//                while ((line = br.readLine()) != null) {
+//                    System.out.println(line);
+//                }
+//                process.waitFor();
                 //--------------------------------------------------------------------------------------------------------
             }
             if (!transformedGraphs.contains(graph)) {
@@ -104,35 +101,10 @@ public class PatternMatcher {
 //                        }
 //                    }
 //                }
-//                if (transformedGraphsSearchTreeSize == transformedGraphsSearchTree.size()){
-//                    // ------------------------------Running IDeSyDe-------------------------------------------------------
-//                    String runPath = ((NamedSystemGraph) graph).name;
-//
-//                    Process process = new ProcessBuilder("./idesyde","-v","DEBUG","--run-path","DSE-Results/" +runPath, "out/" + ((NamedSystemGraph) graph).name + ".fiodl", "bus_small_with_hwacc.fiodl").start();
-//
-//                    InputStream is = process.getInputStream();
-//                    InputStreamReader isr = new InputStreamReader(is);
-//                    BufferedReader br = new BufferedReader(isr);
-//                    String line;
-//                    while ((line = br.readLine()) != null) {
-//                        System.out.println(line);
-//                    }
-//                    process.waitFor();
-//                    //--------------------------------------------------------------------------------------------------------
-//                }
             }
             System.out.println("Round done with " + transformedGraphs.size() + " transformed graphs");
             round = round +1;
         }
-
-//        Files.createDirectories(Paths.get("out"));
-//        for (SystemGraph g: transformedGraphs){
-//            if (g instanceof NamedSystemGraph) {
-//                modelHandler.writeModel(g, "out/" + ((NamedSystemGraph) g).name + ".fiodl");
-//                modelHandler.writeModel(g, "out/" + ((NamedSystemGraph) g).name + ".kgt");
-//            }
-//        }
-        //------------------------------------END---------------------------------------------------------------------
 
         modelHandler.writeModel(SystemGraph, "visual.kgt");
     }

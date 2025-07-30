@@ -28,3 +28,5 @@ Thumbs.db
 # Secret files
 secrets.json
 
+
+.gradle/
